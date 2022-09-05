@@ -41,6 +41,11 @@ func index(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	templates.ExecuteTemplate(w, "layout", invoices)
 }
 
+type info struct {
+	Invoice models.Invoice
+	Total   int64
+}
+
 func invoice(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	id, err := strconv.Atoi(p.ByName("id"))
 	if err != nil {
@@ -53,15 +58,21 @@ func invoice(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 	templates := template.Must(template.ParseFiles(files...))
 	invoice := models.Invoice{}
-	info, err := invoice.Retrieve(db, id)
+	data := info{}
+	invoiceInfo, err := invoice.Retrieve(db, id)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+	data.Invoice = invoiceInfo
 	items := models.LineItem{}
 	lineItems, err := items.GetFromInvoice(db, id)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	info.LineItems = lineItems
-	templates.ExecuteTemplate(w, "layout", info)
+	data.Invoice.LineItems = lineItems
+	for _, item := range data.Invoice.LineItems {
+		data.Total += item.Amount
+	}
+	fmt.Print(data)
+	templates.ExecuteTemplate(w, "layout", data)
 }

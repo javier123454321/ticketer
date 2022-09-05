@@ -1,12 +1,12 @@
 {{ define "content" }}
 
-<div class="max-w-lg mx-auto text-center" id="index-container">
+<div class="text-center" id="index-container">
   {{ . | len }} Outstanding Invoices:
-  <ul>
+  <ul class="max-w-lg mx-auto ">
   {{ range . }}
     <li class="my-24">
-      <a href="/invoice/{{ .Id }}" class="my-8 p-8 rounded-lg shadow w-full hover:shadow-xl transition-shadow">
-        <span class="font-black">Due:</span> {{ .DueDate | humanDate }} <br>
+      <a href="/invoice/{{ .Id }}" class="my-8 p-8 rounded-lg shadow hover:shadow-xl transition-shadow">
+        <span class="font-black">Due:</span><span x-data="{ due: '{{ .DueDate }}', fmtDate(){ return new Date(this.due).toLocaleDateString()} }" x-text="fmtDate()"></span> <br>
       </a>
     </li>
   {{ else }}
