@@ -1,0 +1,18 @@
+{{ define "content" }}
+
+<div class="max-w-lg mx-auto text-center" id="index-container">
+  {{ . | len }} Outstanding Invoices:
+  <ul>
+  {{ range . }}
+    <li class="my-24">
+      <a href="/invoice/{{ .Id }}" class="my-8 p-8 rounded-lg shadow w-full hover:shadow-xl transition-shadow">
+        <span class="font-black">Due:</span> {{ .DueDate | humanDate }} <br>
+      </a>
+    </li>
+  {{ else }}
+    <li> Nothing to show </li>
+  {{ end}}
+  </ul>
+</div>
+
+{{ end }}

@@ -16,6 +16,7 @@ import (
 
 func main() {
 	router := httprouter.New()
+	router.ServeFiles("/dist/*filepath", http.Dir("./dist"))
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		http.Redirect(w, r, "/invoice", 301)
 	})
@@ -27,8 +28,8 @@ func main() {
 
 func index(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	files := []string{
-		"views/layout.html",
-		"views/index.html",
+		"resources/views/layout.html",
+		"resources/views/index.html",
 	}
 	templates := template.Must(template.ParseFiles(files...))
 	db := dbconfig.Init()
@@ -47,8 +48,8 @@ func invoice(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 	db := dbconfig.Init()
 	files := []string{
-		"views/layout.html",
-		"views/invoice.html",
+		"resources/views/layout.html",
+		"resources/views/invoice.html",
 	}
 	templates := template.Must(template.ParseFiles(files...))
 	invoice := models.Invoice{}
