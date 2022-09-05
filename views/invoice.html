@@ -1,0 +1,18 @@
+{{ define "content" }}
+  <div class="container" id="invoice-container">
+   invoice id: {{ .Id }}
+    {{ range .LineItems }}
+      <li>
+          Item: {{ .Name }}
+      </li>
+      <li>
+          Due: {{ .Amount }}
+      </li>
+      <li>
+          Description: {{ .Description }}
+      </li>
+    {{ else }}
+      <li> Nothing to show </li>
+    {{ end}}
+  </div>
+{{ end }}

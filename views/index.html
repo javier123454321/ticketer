@@ -1,0 +1,18 @@
+{{ define "content" }}
+
+<div class="container" id="index-container">
+  Outstanding Invoices:
+  <ul>
+  {{ range . }}
+    <li>
+      <a href="/invoice/{{ .Id }}">
+        Due: {{ .DueDate }} <br>
+      </a>
+    </li>
+  {{ else }}
+    <li> Nothing to show </li>
+  {{ end}}
+  </ul>
+</div>
+
+{{ end }}
