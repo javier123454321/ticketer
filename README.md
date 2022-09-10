@@ -1,4 +1,4 @@
-# Invoicer Demo Application
+# ticketer Demo Application
 ## By Javier Gonzalez
 This application is written in Go. I like go, so that's why. I have been recently building with it and felt it was either this or using JavaScript (or TS) but I kind of have a philosophical preference against using Js in the backend. This was the quickest to get something ready, and it has everything in the standard library. (I also considered PHP and Laravel but it felt like overkill)
 ## The Application
@@ -10,7 +10,7 @@ The client side logic is quite narrow, and the index page is frankly quite ugly.
 ## What is missing
 It is not yet a CRUD app, it is just a CR app, with the create being only handled with the seeder. Obvious next steps are adding create functionality for line items, for invoices, and for users. Oh, also I should probably show the user that is the payer of the invoice, would do that next time. The application also lacks testing, styling, and some more refactoring (I meant to make a config object for the server info, separate the router, and create a controller directory). 
 ## How to Run it
-You need Go installed and a postgres database called 'invoicer' (no user or password). Then install our 2 dependencies with `go get .`. Then you can migrate the database and seed it by running these commands:
+You need Go installed and a postgres database called 'ticketer' (no user or password). Then install our 2 dependencies with `go get .`. Then you can migrate the database and seed it by running these commands:
 ```
 go run models/migrations/migrations.go
 go run models/seeder/seeder.go

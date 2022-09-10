@@ -12,7 +12,7 @@ type User struct {
 }
 
 func (u *User) CreateTable(db *sql.DB) {
-	stmnt := `CREATE TABLE "user" (
+	stmnt := `CREATE TABLE "users" (
 		id              serial primary key,
 		email           varchar(255),
 		name            varchar(255)
@@ -33,7 +33,7 @@ func (u *User) CreateTable(db *sql.DB) {
 }
 
 func (u *User) Create(db *sql.DB) error {
-	stmnt := `insert into "user" (name, email) values ($1, $2) returning id`
+	stmnt := `insert into "users" (name, email) values ($1, $2) returning id`
 
 	stmt, err := db.Prepare(stmnt)
 	if err != nil {

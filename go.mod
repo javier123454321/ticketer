@@ -1,4 +1,4 @@
-module sample-invoicer
+module ticketer
 
 go 1.18
 

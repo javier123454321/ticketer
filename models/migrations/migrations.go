@@ -1,16 +1,14 @@
 package main
 
 import (
-	"sample-invoicer/dbconfig"
-	"sample-invoicer/models"
+	"ticketer/dbconfig"
+	"ticketer/models"
 )
 
 func main() {
 	db := dbconfig.Init()
 	user := models.User{}
-	invoice := models.Invoice{}
-	items := models.LineItem{}
+	ticket := models.Ticket{}
 	user.CreateTable(db)
-	invoice.CreateTable(db)
-	items.CreateTable(db)
+	ticket.CreateTable(db)
 }

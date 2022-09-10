@@ -5,9 +5,9 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"sample-invoicer/dbconfig"
-	"sample-invoicer/models"
 	"strconv"
+	"ticketer/dbconfig"
+	"ticketer/models"
 
 	_ "github.com/lib/pq"
 

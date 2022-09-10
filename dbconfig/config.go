@@ -9,7 +9,7 @@ import (
 
 func Init() *sql.DB {
 	var err error
-	db, err := sql.Open("postgres", "dbname=invoicer sslmode=disable")
+	db, err := sql.Open("postgres", "dbname=ticketer sslmode=disable")
 	if err != nil {
 		fmt.Println((err.Error()))
 		panic(err)
