@@ -18,10 +18,10 @@ func main() {
 	router := httprouter.New()
 	router.ServeFiles("/dist/*filepath", http.Dir("./dist"))
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		http.Redirect(w, r, "/invoice", 301)
+		http.Redirect(w, r, "/ticket", 301)
 	})
-	router.GET("/invoice/:id", invoice)
-	router.GET("/invoice", index)
+	router.GET("/ticket/:id", ticket)
+	router.GET("/ticket", index)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
@@ -33,20 +33,15 @@ func index(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 	templates := template.Must(template.ParseFiles(files...))
 	db := dbconfig.Init()
-	i := models.Invoice{}
-	invoices, err := i.Index(db, 15)
+	i := models.Ticket{}
+	tickets, err := i.Index(db, 15)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	templates.ExecuteTemplate(w, "layout", invoices)
+	templates.ExecuteTemplate(w, "layout", tickets)
 }
 
-type info struct {
-	Invoice models.Invoice
-	Total   int64
-}
-
-func invoice(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func ticket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	id, err := strconv.Atoi(p.ByName("id"))
 	if err != nil {
 		fmt.Println(err.Error())
@@ -54,25 +49,13 @@ func invoice(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	db := dbconfig.Init()
 	files := []string{
 		"resources/views/layout.html",
-		"resources/views/invoice.html",
+		"resources/views/ticket.html",
 	}
 	templates := template.Must(template.ParseFiles(files...))
-	invoice := models.Invoice{}
-	data := info{}
-	invoiceInfo, err := invoice.Retrieve(db, id)
+	ticket := models.Ticket{}
+	err = ticket.Retrieve(db, id)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	data.Invoice = invoiceInfo
-	items := models.LineItem{}
-	lineItems, err := items.GetFromInvoice(db, id)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	data.Invoice.LineItems = lineItems
-	for _, item := range data.Invoice.LineItems {
-		data.Total += item.Amount
-	}
-	fmt.Print(data)
-	templates.ExecuteTemplate(w, "layout", data)
+	templates.ExecuteTemplate(w, "layout", ticket)
 }

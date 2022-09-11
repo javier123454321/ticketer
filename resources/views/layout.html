@@ -1,27 +1,22 @@
 {{ define "layout" }}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=9">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../../dist/output.css">
-    <script src="//unpkg.com/alpinejs" defer></script>
-    <title>Sample Ticketer</title>
-  </head>
-  <body>
-    <div>
-      {{ template "content" . }}
-    </div> 
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=9">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../dist/output.css">
+  <script src="//unpkg.com/alpinejs" defer></script>
+  <title>Sample Ticketer</title>
+</head>
+
+<body>
+  <div>
+    {{ template "content" . }}
+  </div>
+</body>
+
 </html>
-<script>
-  const elementsWithCurrency = document.querySelectorAll("[data-currency]")
-  elementsWithCurrency.forEach(el => {
-    const { currency } = el.dataset
-    const arr = currency.split('')
-    arr.splice(currency.length - 6, 0, ".")
-    el.innerText = arr.join('').slice(0, arr.length - 4)
-  })
-</script>
-{{ end }} 
+{{ template "script" }}
+{{ end }}
