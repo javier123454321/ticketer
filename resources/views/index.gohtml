@@ -1,9 +1,19 @@
 {{ define "content" }}
 <div class="max-w-lg mx-auto" id="index-container">
-  <h1 class="font-black text-4xl py-8">
-    {{ . | len }} Outstanding tickets:
-  </h1>
-  <div class="flex items-center">
+    <h1 class="font-black text-4xl py-8">
+      {{ . | len }} Outstanding tickets
+    </h1>
+    <div class="text-center">
+      <button class="border border-slate-900 rounded-lg">
+        <a href="ticket/create" class="px-4 py-2 flex">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 -ml-1 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          New Ticket        
+        </a>
+      </button>
+    </div>
+  <div class="flex items-center mt-8">
     <div class="flex-col w-1/2" x-data="statusDropdown">
       <button class="px-8 py-2 bg-blue-800 rounded-lg text-white flex items-center" @click="toggle">
         <span class="font-bold mr-1">Sort By Status:</span>
@@ -81,11 +91,10 @@
   <ul class="">
     {{ range . }}
     <li class="">
-      <a href="/ticket/{{ .Id }}" class="w-full h-full">
+      <a href="/ticket/show/{{ .Id }}" class="w-full h-full">
         <div class="my-8 p-8 bg-slate-200 rounded-lg shadow hover:shadow-xl transition-shadow">
           <h2 class="font-black text-2xl">{{ .Title }}</h2>
-          <h2 class="font-black text-xl">Assigned To <span x-data="fetchUser({{.UserId}})"
-              :x-text="getUserFromId"></span>
+          <h2 class="font-black text-xl">Assigned To {{.UserId}}
           </h2>
           <span class="font-black">Due:</span>
           <span x-data="{ due: '{{ .DueDate }}', fmtDate(){ return new Date(this.due).toLocaleDateString()} }"

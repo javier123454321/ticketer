@@ -20,7 +20,9 @@ func main() {
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		http.Redirect(w, r, "/ticket", 301)
 	})
-	router.GET("/ticket/:id", ticket)
+	router.GET("/ticket/create", createTicket)
+	router.POST("/ticket/create", storeTicket)
+	router.GET("/ticket/show/:id", ticket)
 	router.GET("/ticket", index)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
@@ -39,7 +41,7 @@ func index(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	var key string
 	if len(r.Form["sortBy"]) != 0 {
 		if len(r.Form["key"]) == 0 || r.Form["key"][0] == "all" {
-			http.Redirect(w, r, "/ticket", 301)
+			http.Redirect(w, r, "/ticket", http.StatusPermanentRedirect)
 			return
 		}
 		filter = r.Form["sortBy"][0]
@@ -69,4 +71,32 @@ func ticket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		fmt.Println(err.Error())
 	}
 	templates.ExecuteTemplate(w, "layout", ticket)
+}
+
+func createTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	files := []string{
+		"resources/views/layout.gohtml",
+		"resources/views/createTicket.gohtml",
+	}
+	templates := template.Must(template.ParseFiles(files...))
+	templates.ExecuteTemplate(w, "layout", "")
+}
+
+func storeTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	r.ParseForm()
+	form := r.Form
+	fmt.Println(form)
+	db := dbconfig.Init()
+	t := models.Ticket{
+		DueDate:     r.Form["due"][0],
+		UserId:      1,
+		Title:       r.Form["title"][0],
+		Description: &r.Form["description"][0],
+	}
+	if t.Create(db) != nil {
+		createTicket(w, r, p)
+	}
+	route := fmt.Sprintf("/ticket/show/%v", t.Id)
+	http.Redirect(w, r, route, http.StatusMovedPermanently)
+	fmt.Println("redirected")
 }
