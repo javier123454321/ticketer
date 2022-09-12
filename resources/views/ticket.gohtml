@@ -1,0 +1,22 @@
+{{ define "content" }}
+<div class="max-w-lg mx-auto pb-8" id="ticket-container">
+  <a href="/ticket"><< Back to Tickets</a>
+  <div class="flex justify-between items-center py-8 mt-8">
+    <h2 class="font-black text-2xl">
+      #{{ .Id }} - {{ .Title }}
+    </h2>
+    <p>Due: <span x-data="{ due: '{{ .DueDate }}', fmtDate(){ return new Date(this.due).toLocaleDateString()} }"
+        x-text="fmtDate()"></span></p>
+  </div>
+  <div>
+    <div class="bg-gray-100 rounded-lg my-4 p-4">
+      <span class="font-black">Description:</span>
+      <div>
+        {{ .Description }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}
+{{ define "script" }}
+{{ end }}

@@ -27,14 +27,25 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	r.ParseForm()
 	files := []string{
-		"resources/views/layout.html",
-		"resources/views/index.html",
+		"resources/views/layout.gohtml",
+		"resources/views/index.gohtml",
 	}
 	templates := template.Must(template.ParseFiles(files...))
 	db := dbconfig.Init()
 	i := models.Ticket{}
-	tickets, err := i.Index(db, 15)
+	var filter string
+	var key string
+	if len(r.Form["sortBy"]) != 0 {
+		if len(r.Form["key"]) == 0 || r.Form["key"][0] == "all" {
+			http.Redirect(w, r, "/ticket", 301)
+			return
+		}
+		filter = r.Form["sortBy"][0]
+		key = r.Form["key"][0]
+	}
+	tickets, err := i.Index(db, 15, filter, key)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -48,8 +59,8 @@ func ticket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 	db := dbconfig.Init()
 	files := []string{
-		"resources/views/layout.html",
-		"resources/views/ticket.html",
+		"resources/views/layout.gohtml",
+		"resources/views/ticket.gohtml",
 	}
 	templates := template.Must(template.ParseFiles(files...))
 	ticket := models.Ticket{}

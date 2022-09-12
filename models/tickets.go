@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 )
 
@@ -68,10 +69,17 @@ func (t *Ticket) Create(db *sql.DB) (err error) {
 	return err
 }
 
-func (t *Ticket) Index(db *sql.DB, limit int) ([]Ticket, error) {
+func (t *Ticket) Index(db *sql.DB, limit int, filter string, key string) ([]Ticket, error) {
 	tickets := []Ticket{}
-	rows, err := db.Query("select id, due_date, user_id, title, status from tickets limit $1;",
-		limit)
+	var filterQuery string
+	if filter != "" {
+		if key == "" {
+			return []Ticket{}, errors.New("key required if filter is active")
+		}
+		filterQuery = fmt.Sprintf("WHERE %s = '%s'", filter, key)
+	}
+	queryString := fmt.Sprintf("select id, due_date, user_id, title, status from tickets %v limit $1;", filterQuery)
+	rows, err := db.Query(queryString, limit)
 	if err != nil {
 		return []Ticket{}, err
 	}
@@ -84,7 +92,6 @@ func (t *Ticket) Index(db *sql.DB, limit int) ([]Ticket, error) {
 		if err != nil {
 			return []Ticket{}, err
 		}
-		fmt.Println("checking", ticket)
 		tickets = append(tickets, ticket)
 	}
 	return tickets, nil
