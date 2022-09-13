@@ -32,7 +32,7 @@ func IndexTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 	tickets, err := i.Index(db, 15, filter, key)
 	if err != nil {
-		fmt.Println(err.Error())
+		panic(err.Error())
 	}
 	templates.ExecuteTemplate(w, "layout", tickets)
 }
@@ -40,7 +40,7 @@ func IndexTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 func ShowTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	id, err := strconv.Atoi(p.ByName("id"))
 	if err != nil {
-		fmt.Println(err.Error())
+		panic(err.Error())
 	}
 	db := dbconfig.Init()
 	files := []string{
@@ -51,7 +51,7 @@ func ShowTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	ticket := models.Ticket{}
 	err = ticket.Retrieve(db, id)
 	if err != nil {
-		fmt.Println(err.Error())
+		panic(err.Error())
 	}
 	templates.ExecuteTemplate(w, "layout", ticket)
 }
@@ -67,8 +67,6 @@ func CreateTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 func StoreTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	r.ParseForm()
-	form := r.Form
-	fmt.Println(form)
 	db := dbconfig.Init()
 	t := models.Ticket{
 		DueDate:     r.Form["due"][0],
@@ -81,5 +79,4 @@ func StoreTicket(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 	route := fmt.Sprintf("/ticket/show/%v", t.Id)
 	http.Redirect(w, r, route, http.StatusSeeOther)
-	fmt.Println("redirected")
 }
